@@ -1,0 +1,103 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.main-container {
+    text-align: center;
+}
+
+.image-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.image-container img {
+    width: 150px;
+    height: auto;
+}
+
+.content {
+    margin-top: 100px;
+}
+
+.content h1 {
+    margin: 0;
+    font-size: 3.5em;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.content p {
+    margin: 10px 0;
+    font-size: 1.2em;
+    color: #666;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttons button, .buttons a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.buttons .get-started {
+    background-color: #7c4dff;
+    color: #fff;
+    border-radius: 50px;
+    height: 40px; 
+    width: 200px;
+    line-height: 20px; 
+    margin-top: 40px;
+    border: none; 
+    cursor: pointer; 
+}
+
+.buttons .login {
+    color: #7c4dff;
+    background-color: transparent;
+    border: none;
+    cursor: pointer; 
+}
+
+.image-one, .image-two {
+    justify-content: center;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+.image-one img {
+    height: 500px;
+    width: 300px;
+    margin-top: 100px;
+}
+
+.image-two img {
+    height: 600px;
+    width: 250px;
+    margin-top: 20px;
+}
+
+.logo img {
+    height: 50px;
+    width: 55px;
+}

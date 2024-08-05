@@ -1,0 +1,36 @@
+<div class="login-container">
+    <div class="logo">
+      <a routerLink="/task">
+        <img src="/logo.png" alt="logo">
+      </a>
+    </div>
+    <h2>Log - In</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="fill" class="matform">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="example@gmail.com" type="email" formControlName="email">
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          Invalid email address
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="matform">
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="********" type="password" formControlName="password">
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit">Log - In</button>
+  
+      <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+    </form>
+    <div class="image-container">
+      <img src="/welcome-center.png" alt="Illustration">
+    </div>
+  </div>
+  

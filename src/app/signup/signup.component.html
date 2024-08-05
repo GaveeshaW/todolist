@@ -1,0 +1,53 @@
+<div class="signup-container">
+  <div class="logo">
+    <a routerLink="/task">
+      <img src="/logo.png" alt="logo">
+    </a>
+  </div>
+  <h2>Sign - Up</h2>
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+    <mat-form-field> <!--Angular material UI-->
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="signupForm.get('name')?.hasError('required')"> <!--Name is required-->
+        Name is required
+      </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" required>
+      <mat-error *ngIf="signupForm.get('email')?.hasError('required')"> <!--Email is required-->
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('email')?.hasError('email')"> <!--Checks if the email is valid-->
+        Invalid email address
+      </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" required>
+      <mat-error *ngIf="signupForm.get('password')?.hasError('required')"> <!--Password is required-->
+        Password is required
+      </mat-error>
+      <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')"> <!--To check the length of the pw-->
+        Password must be at least 8 characters
+      </mat-error>
+    </mat-form-field>
+  
+    <mat-form-field>
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" required [errorStateMatcher]="passwordErrorStateMatcher"> 
+      <mat-error *ngIf="signupForm.hasError('mismatch')">
+        Passwords do not match
+      </mat-error>
+    </mat-form-field>
+  
+    <button mat-raised-button type="submit" [disabled]="!signupForm.valid">Sign Up</button> <!--This button is disabled until all the four boxes have been filled-->
+  </form>
+  
+  <div class="image-container">
+    <img src="/welcome-center.png" alt="Illustration">
+  </div>
+</div>
