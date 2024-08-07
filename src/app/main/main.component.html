@@ -1,7 +1,58 @@
-<div class="image-container">
-    <img src="/img.jpg">
-    <div class="profile-container">
-        <p>Gaveesha Welhena</p>
-        <img src="/profile.jpg">
+<div class="task-manager-container">
+    <div class="sidebar">
+      <div class="profile-section">
+        <img src="/profile.jpg" class="profile-img" alt="Profile">
+        <div class="profile-info">
+          <p>Gaveesha Welhena</p>
+          <p>gaveeshaalliontechnologies.com</p>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-nav-list>
+        <mat-list-item>
+          <mat-icon>home</mat-icon>
+          <span>My Day</span>
+          <span class="task-count">5</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>star</mat-icon>
+          <span>Important</span>
+          <span class="task-count">2</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>event</mat-icon>
+          <span>Planned</span>
+          <span class="task-count">3</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>list</mat-icon>
+          <span>Tasks</span>
+          <span class="task-count">8</span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon>delete</mat-icon>
+          <span>Deleted tasks</span>
+          <span class="task-count">1</span>
+        </mat-list-item>
+      </mat-nav-list>
+      <button mat-button class="new-list-button">+ New list</button>
     </div>
-</div>
+    <div class="content">
+      <h1>My Day</h1>
+      <p>Thursday, July 18</p>
+      <mat-list>
+        <mat-list-item *ngFor="let task of tasks">
+          <mat-checkbox></mat-checkbox>
+          <span>{{task.name}}</span>
+          <button mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>star</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+      <button mat-button class="add-task-button">+ Add a task</button>
+    </div>
+  </div>
+  

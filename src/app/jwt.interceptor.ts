@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let token = localStorage.getItem('token'); // Get token from storage
+    let token = localStorage.getItem('token'); // get token from storage
 
     if (token) {
       request = request.clone({

@@ -10,7 +10,13 @@ import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { JwtInterceptor } from './jwt.interceptor';
 import { HttpClientModule } from '@angular/common/http';
 import { MainComponent } from './main/main.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatNavList } from '@angular/material/list'; 
 
 @NgModule({
   declarations: [
@@ -19,8 +25,15 @@ import { MainComponent } from './main/main.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatCheckboxModule,
+    MatDividerModule,
     AppRoutingModule,
     TaskComponent,
+    MatNavList,
     SignupComponent,
     LoginComponent,
     HttpClientModule
