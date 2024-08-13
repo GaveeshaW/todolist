@@ -29,7 +29,7 @@ import { CommonModule } from '@angular/common';
 
 //the SignupComponent
 export class SignupComponent {
-  signupForm: FormGroup; //
+  signupForm: FormGroup; 
   passwordErrorStateMatcher = new PasswordErrorStateMatcher(); //creates an instance of the passwordErrorStateMatcher
 
   constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) { //the constructor with auth, router for routing the paths and form builder for the form

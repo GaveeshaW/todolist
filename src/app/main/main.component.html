@@ -3,56 +3,57 @@
       <div class="profile-section">
         <img src="/profile.jpg" class="profile-img" alt="Profile">
         <div class="profile-info">
-          <p>Gaveesha Welhena</p>
-          <p>gaveeshaalliontechnologies.com</p>
+          <p class="uname">Gaveesha Welhena</p>
+          <p class="uemail">gaveeshaalliontechnologies.com</p>
         </div>
       </div>
-      <mat-divider></mat-divider>
       <mat-nav-list>
-        <mat-list-item>
+        <mat-list-item class="list">
           <mat-icon>home</mat-icon>
-          <span>My Day</span>
-          <span class="task-count">5</span>
+          <span>  My Day  </span>
+          <span class="task-count"></span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item class="list">
           <mat-icon>star</mat-icon>
-          <span>Important</span>
-          <span class="task-count">2</span>
+          <span>  Important  </span>
+          <span class="task-count"></span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item class="list">
           <mat-icon>event</mat-icon>
-          <span>Planned</span>
-          <span class="task-count">3</span>
+          <span>  Planned  </span>
+          <span class="task-count">10</span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item class="list">
           <mat-icon>list</mat-icon>
-          <span>Tasks</span>
-          <span class="task-count">8</span>
+          <span>  Tasks  </span>
+          <span class="task-count">1000</span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item class="list">
           <mat-icon>delete</mat-icon>
-          <span>Deleted tasks</span>
-          <span class="task-count">1</span>
+          <span>  Deleted tasks  </span>
+          <span class="task-count"></span>
         </mat-list-item>
       </mat-nav-list>
+      <mat-divider class="divider"></mat-divider>
       <button mat-button class="new-list-button">+ New list</button>
     </div>
     <div class="content">
-      <h1>My Day</h1>
-      <p>Thursday, July 18</p>
-      <mat-list>
-        <mat-list-item *ngFor="let task of tasks">
-          <mat-checkbox></mat-checkbox>
-          <span>{{task.name}}</span>
-          <button mat-icon-button>
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button>
-            <mat-icon>star</mat-icon>
-          </button>
-        </mat-list-item>
-      </mat-list>
+      <h1 class="myday">My Day</h1>
+      <p class="date">Thursday, July 18</p>
+      <div class="tasks-container">
+        <mat-list>
+          <mat-list-item class="listitem" *ngFor="let task of tasks">
+            <mat-checkbox class="checkbox"></mat-checkbox>
+            <span class="taskname">{{task.name}}</span>
+            <button mat-icon-button>
+              <mat-icon class="icon">delete</mat-icon>
+            </button>
+            <button mat-icon-button>
+              <mat-icon class="icon">star</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </div>
       <button mat-button class="add-task-button">+ Add a task</button>
     </div>
   </div>
-  

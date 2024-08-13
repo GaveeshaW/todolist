@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -6,18 +8,12 @@ const cors = require('cors');
 
 const app = express();
 const PORT = 3000;
-const SECRET_KEY = 'your_secret_key';
+const SECRET_KEY = process.env.SECRET_KEY;
 
 app.use(bodyParser.json());
 app.use(cors());
 
-let users = [
-  {
-    id: 1,
-    email: 'test@example.com',
-    password: bcrypt.hashSync('password123', 8) // Pre-hashed password for the test user
-  }
-];
+let users = [];
 
 // Signup Route
 app.post('/api/signup', (req, res) => {
@@ -32,7 +28,7 @@ app.post('/api/signup', (req, res) => {
   const newUser = { id: users.length + 1, email, password: hashedPassword };
 
   users.push(newUser);
-  const token = jwt.sign({ id: newUser.id }, SECRET_KEY, { expiresIn: '1h' });
+  const token = jwt.sign({ id: newUser.id }, SECRET_KEY);
 
   res.status(201).send({ token });
 });
@@ -58,7 +54,7 @@ app.post('/api/login', (req, res) => {
     return res.status(401).send({ message: 'Invalid email or password' });
   }
 
-  const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1h' });
+  const token = jwt.sign({ id: user.id }, SECRET_KEY);
   res.status(200).send({ token });
   
 });

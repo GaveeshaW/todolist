@@ -1,66 +1,129 @@
 .task-manager-container {
-    display: flex;
-    height: 100vh;
-    background-image: url('/img.jpg');
-    background-size: cover;
-    color: white;
+   display: flex;
+   height: 100vh; /* Full viewport height */
+   background-image: url('/img.jpg');
+   background-size: cover;
+   color: white;
 }
   
 .sidebar {
-    width: 300px;
-    background-color: rgba(193, 193, 193, 0.7);
-    padding: 20px;
-    height: 615px;
-    margin-top: 20px;
-    margin-left: 20px;
+   width: 300px;
+   background-color: rgba(193, 193, 193, 0.7);
+   padding: 20px;
+   height: auto;
+   margin-top: 20px;
+   margin-left: 20px;
+   margin-bottom: 20px;
 }
   
 .profile-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+   display: flex;
+   align-items: center;
+   margin-bottom: 20px;
 }
   
 .profile-img {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
+   height: 50px;
+   width: 50px;
+   border-radius: 50%;
+   margin-right: 10px;
 }
   
 .profile-info p {
-    margin: 0;
-    color: black;
+   margin: 0;
+   color: black;
 }
   
 .mat-nav-list {
-    margin-top: 20px;
+   margin-top: 20px;
 }
   
 .mat-list-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
 }
   
 .task-count {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    padding: 2px 8px;
+   margin-left: 150px;
 }
   
 .new-list-button {
-    width: 100%;
-    margin-top: 20px;
+   width: 100%;
+   margin-top: 20px;
 }
   
 .content {
-    flex-grow: 1;
-    padding: 20px;
+   flex-grow: 1;
+   display: flex;
+   flex-direction: column;
+   padding: 20px;
+   overflow-y: auto;
+}
+  
+.myday {
+   font-weight: 100;
+   font-size: 45px;
+   margin-top: 20px;
+   margin-bottom: 0px;
+}
+  
+.date {
+   margin-bottom: 20px;
+}
+  
+.tasks-container { 
+   flex-grow: 1;
+   overflow-y: auto;
+   margin-bottom: 20px; 
+   scrollbar-width: 2px;
 }
   
 .add-task-button {
-    width: 100%;
-    margin-top: 20px;
+   width: 100%;
+   margin-top: 20px;
+}
+ 
+.divider {
+   background-color: white;
+   height: 3px;
+}
+  
+.list {
+   background-color: rgb(255, 255, 255, 0.3);
+   margin-bottom: 10px;
+}
+  
+.icon {
+   color: white;
+   justify-content: space-between;
+}
+  
+.taskname {
+   color: white;
+   flex-grow: 1;
+   padding-right: 10px;
+}
+  
+.listitem {
+   background-color: rgb(56, 53, 53);
+   margin-bottom: 10px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px;
+}
+  
+.checkbox {
+   color: white;
+}
+  
+.uname {
+   font-weight: bold;
+   font-size: 18px;
+}
+  
+.uemail {
+   margin-top: 20px;
 }
   

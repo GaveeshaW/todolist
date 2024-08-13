@@ -10,6 +10,14 @@ export class MainComponent {
     { name: 'Learn Angular' },
     { name: 'Attend the meeting at 5pm' },
     { name: 'Play video games', completed: true },
+    { name: 'Attend the meeting at 9am', completed: true },
+    { name: 'Learn Angular' },
+    { name: 'Attend the meeting at 5pm' },
+    { name: 'Play video games', completed: true },
+    { name: 'Attend the meeting at 9am', completed: true },
+    { name: 'Learn Angular' },
+    { name: 'Attend the meeting at 5pm' },
+    { name: 'Play video games', completed: true },
     { name: 'Attend the meeting at 9am', completed: true }
   ]
 }
