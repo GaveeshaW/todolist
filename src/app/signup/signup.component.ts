@@ -58,6 +58,8 @@ export class SignupComponent {
     this.authService.signup(user).subscribe(response => { //checks if the token is found in the response, if so set it to localstorage and redirect to login page
       if (response.token) { 
         localStorage.setItem('token', response.token); 
+        localStorage.setItem('userName', user.name);
+        localStorage.setItem('userEmail', user.email);
         this.router.navigate(['login']); 
       } else { //if not print in the console logs that the token isnt found
         console.error('Token not found in response'); 

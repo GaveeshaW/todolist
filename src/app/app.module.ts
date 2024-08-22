@@ -17,13 +17,22 @@ import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatNavList } from '@angular/material/list';
-import { ImportantComponent } from './important/important.component'; 
+import { ImportantComponent } from './important/important.component';
+import { FormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms';
+import { PlannedComponent } from './planned/planned.component';
+import { TasksComponent } from './tasks/tasks.component';
+import { DeletedtasksComponent } from './deletedtasks/deletedtasks.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    ImportantComponent
+    ImportantComponent,
+    PlannedComponent,
+    TasksComponent,
+    DeletedtasksComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +47,10 @@ import { ImportantComponent } from './important/important.component';
     MatNavList,
     SignupComponent,
     LoginComponent,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule
   ],
   providers: [
     provideClientHydration(),
