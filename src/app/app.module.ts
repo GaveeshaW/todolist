@@ -24,6 +24,8 @@ import { PlannedComponent } from './planned/planned.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { DeletedtasksComponent } from './deletedtasks/deletedtasks.component';
 import { RouterModule } from '@angular/router';
+import { MatFormField } from '@angular/material/form-field';
+import { MatLabel } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { RouterModule } from '@angular/router';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    MatFormField,
+    MatLabel
   ],
   providers: [
     provideClientHydration(),
