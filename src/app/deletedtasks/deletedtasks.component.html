@@ -1,0 +1,53 @@
+<div class="task-manager-container">
+  <div class="sidebar">
+    <div class="profile-section">
+      <img src="/avatar.png" class="profile-img" alt="Profile">
+      <div class="profile-info">
+        <p class="uname">{{ userName }}</p>
+        <p class="uemail">{{ userEmail }}</p>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search..." class="search-input" [(ngModel)]="searchQuery" (input)="onSearch()">
+      <mat-icon class="search-icon">search</mat-icon>
+    </div>
+    <mat-nav-list>
+      <mat-list-item class="list" routerLink="/main" [ngClass]="{'active': activeRoute === '/main'}">
+        <mat-icon>home</mat-icon>
+        <span>  My Day  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/important" [ngClass]="{'active': activeRoute === '/important'}">
+        <mat-icon>star</mat-icon>
+        <span>  Important  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/planned" [ngClass]="{'active': activeRoute === '/planned'}">
+        <mat-icon>event</mat-icon>
+        <span>  Add To-Do  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/tasks" [ngClass]="{'active': activeRoute === '/tasks'}">
+        <mat-icon>list</mat-icon>
+        <span>  Edit To-Do  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/deletedtasks" [ngClass]="{'active': activeRoute === '/deletedtasks'}">
+        <mat-icon>delete</mat-icon>
+        <span>  Deleted tasks  </span>
+      </mat-list-item>
+    </mat-nav-list>
+    <mat-divider class="divider"></mat-divider>
+  </div>
+  <div class="content">
+    <h1 class="myday">Deleted Tasks</h1>
+    <p class="date">{{ currentDate }}</p>
+    <div class="tasks-container">
+      <div class="task-item" *ngFor="let task of deletedTasks; let i = index">
+        <label>{{ task.name }}</label>
+        <div class="icons">
+          <button mat-icon-button class="restore" (click)="restoreTask(task)">
+            <mat-icon class="restore-icon">restore</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  

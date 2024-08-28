@@ -1,0 +1,58 @@
+<div class="task-manager-container">
+  <div class="sidebar">
+    <div class="profile-section">
+      <img src="/avatar.png" class="profile-img" alt="Profile">
+      <div class="profile-info">
+        <p class="uname">{{ userName }}</p>
+        <p class="uemail">{{ userEmail }}</p>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search..." class="search-input">
+      <mat-icon class="search-icon">search</mat-icon>
+    </div>
+    <mat-nav-list>
+       <mat-list-item class="list" routerLink="/main" [ngClass]="{'active': activeRoute === '/main'}">
+        <mat-icon>home</mat-icon>
+        <span>  My Day  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/important" [ngClass]="{'active': activeRoute === '/important'}">
+        <mat-icon>star</mat-icon>
+        <span>  Important  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/planned" [ngClass]="{'active': activeRoute === '/planned'}">
+        <mat-icon>event</mat-icon>
+        <span>  Add To-Do  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/tasks" [ngClass]="{'active': activeRoute === '/tasks'}">
+        <mat-icon>list</mat-icon>
+        <span>  Edit To-Do  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/deletedtasks" [ngClass]="{'active': activeRoute === '/deletedtasks'}">
+        <mat-icon>delete</mat-icon>
+        <span>  Deleted tasks  </span>
+      </mat-list-item>
+    </mat-nav-list>
+    <mat-divider class="divider"></mat-divider>
+  </div>
+  <div class="content">
+    <h1 class="myday">Add To-Do</h1>
+    <p class="date">{{ currentDate }}</p>
+    <div class="tasks-container">
+      <form [formGroup]="toDoForm" (ngSubmit)="addTask()" class="addForm">
+        <h1 class="formheading">Add a task</h1>
+        <div class="task-input-container">
+          <input type="text" class="task-input" placeholder="Enter task name" formControlName="task">
+          <mat-icon class="star-icon" (click)="toggleStar()" [ngClass]="{'starred': isImportant}">{{ isImportant ? 'star' : 'star_border' }}</mat-icon>
+        </div>        
+        <div class="form-footer">
+          <div class="buttonadd">
+            <button type="submit" class="cancel-button" (click)="clearForm()">Cancel</button>
+            <button type="submit" class="add-task-button" (click)="submit()">Add the Task</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  

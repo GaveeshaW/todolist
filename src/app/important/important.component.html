@@ -1,0 +1,55 @@
+<div class="task-manager-container">
+  <div class="sidebar">
+    <div class="profile-section">
+      <img src="/avatar.png" class="profile-img" alt="Profile">
+      <div class="profile-info">
+        <p class="uname">{{ userName }}</p>
+        <p class="uemail">{{ userEmail }}</p>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search..." class="search-input">
+      <mat-icon class="search-icon">search</mat-icon>
+    </div>
+    <mat-nav-list>
+      <mat-list-item class="list" routerLink="/main" [ngClass]="{'active': activeRoute === '/main'}">
+        <mat-icon>home</mat-icon>
+        <span>  My Day  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/important" [ngClass]="{'active': activeRoute === '/important'}">
+        <mat-icon>star</mat-icon>
+        <span>  Important  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/planned" [ngClass]="{'active': activeRoute === '/planned'}">
+        <mat-icon>event</mat-icon>
+        <span>  Add To-Do  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/tasks" [ngClass]="{'active': activeRoute === '/tasks'}">
+        <mat-icon>list</mat-icon>
+        <span>  Edit To-Do  </span>
+      </mat-list-item>
+      <mat-list-item class="list" routerLink="/deletedtasks" [ngClass]="{'active': activeRoute === '/deletedtasks'}">
+        <mat-icon>delete</mat-icon>
+        <span>  Deleted tasks  </span>
+      </mat-list-item>
+    </mat-nav-list>
+    <mat-divider class="divider"></mat-divider>
+  </div>
+  <div class="content">
+    <h1 class="myday">Important</h1>
+    <p class="date">{{ currentDate }}</p>
+    <div class="tasks-container">
+      <div class="task-item" *ngFor="let task of importantTasks">
+        <input type="checkbox" id="task-checkbox" class="task" (change)="toggleTaskCompletion(task)" [checked]="task.completed" />
+        <label for="task-checkbox-{{task.name}}">{{task.name}}</label>
+        <div class="icons">
+          <button mat-icon-button (click)="toggleImportant(task)">
+            <mat-icon class="star-icon">{{ task.important ? 'star' : 'star_border' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button mat-button class="add-task-button custom-button" (click)="addTask()">+ Add a task</button>
+  </div>
+</div>
+  
