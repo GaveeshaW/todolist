@@ -26,6 +26,7 @@ import { DeletedtasksComponent } from './deletedtasks/deletedtasks.component';
 import { RouterModule } from '@angular/router';
 import { MatFormField } from '@angular/material/form-field';
 import { MatLabel } from '@angular/material/form-field';
+import { MatError } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { MatLabel } from '@angular/material/form-field';
     ReactiveFormsModule,
     RouterModule,
     MatFormField,
-    MatLabel
+    MatLabel,
+    MatError
   ],
   providers: [
     provideClientHydration(),
