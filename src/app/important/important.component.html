@@ -1,4 +1,5 @@
 <div class="task-manager-container">
+  <!--div tag for the side bar-->
   <div class="sidebar">
     <div class="profile-section">
       <img src="/avatar.png" class="profile-img" alt="Profile">
@@ -7,10 +8,13 @@
         <p class="uemail">{{ userEmail }}</p>
       </div>
     </div>
+    <!--div tag for the search bar-->
     <div class="search-bar">
       <input type="text" placeholder="Search..." class="search-input">
       <mat-icon class="search-icon">search</mat-icon>
     </div>
+    <!--using angular material's nav list to add the five tabs-->
+    <!--using other angular materials as well for icons, list items and divider-->
     <mat-nav-list>
       <mat-list-item class="list" routerLink="/main" [ngClass]="{'active': activeRoute === '/main'}">
         <mat-icon>home</mat-icon>
@@ -35,6 +39,7 @@
     </mat-nav-list>
     <mat-divider class="divider"></mat-divider>
   </div>
+  <!--div tag for displaying the content which is all the tasks marked as important-->
   <div class="content">
     <h1 class="myday">Important</h1>
     <p class="date">{{ currentDate }}</p>

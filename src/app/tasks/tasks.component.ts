@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
 })
 export class TasksComponent implements OnInit {
 
-  tasks: { name: string; completed?: boolean; important?: boolean }[] = [];
-  filteredTasks: { name: string; completed?: boolean; important?: boolean }[] = [];
+  tasks: { name: string; completed?: boolean; important?: boolean; editable?: boolean }[] = [];
+  filteredTasks: { name: string; completed?: boolean; important?: boolean; editable?: boolean }[] = [];
   signupForm: FormGroup;
   userName: string = '';
   userEmail: string = '';
@@ -28,18 +28,15 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Get the current route
     this.activeRoute = this.router.url;
     this.router.events.subscribe(() => {
       this.activeRoute = this.router.url;
     });
 
-    // Load user data from localStorage
     this.userName = localStorage.getItem('userName') || '';
     this.userEmail = localStorage.getItem('userEmail') || '';
     this.currentDate = formatDate(new Date(), 'fullDate', 'en-US');
 
-    // Load tasks from localStorage
     const storedTasks = localStorage.getItem('tasks');
     if (storedTasks) {
       this.tasks = JSON.parse(storedTasks);
@@ -108,6 +105,18 @@ export class TasksComponent implements OnInit {
     this.filterTasks();
   }
 
+  onTaskClick(task: any): void {
+    task.editable = true; // Make the task editable
+  }
+
+  updateTask(task: any, event: Event): void {
+    const target = event.target as HTMLElement;
+    if (target && target.innerText !== null) {
+      task.name = target.innerText;
+      this.saveTasksToStorage();
+    }
+  }  
+  
   onSubmit() {
     if (this.signupForm.valid) {
       this.userName = this.signupForm.get('name')?.value;

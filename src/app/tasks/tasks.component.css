@@ -177,3 +177,38 @@
  .search-icon:hover {
     cursor: pointer;
  }
+
+ .edit-task-input {
+   background-color: transparent;
+   border: none;
+   color: white;
+   width: 100%;
+   outline: none;
+   font-size: 16px;
+   margin-left: 10px;
+ }
+ 
+ .edit-task-input:focus {
+   border-bottom: 1px solid white;
+ }
+ 
+ .task-name {
+   flex-grow: 1; 
+ }
+ 
+ .task-item input[type="checkbox"] {
+   margin-right: 10px; 
+ }
+ 
+ .editable-task {
+   flex-grow: 1; 
+   margin-right: 10px;
+   outline: none; 
+   cursor: text; 
+ }
+ 
+ .icons {
+   display: flex;
+   align-items: center;
+ }
+ 

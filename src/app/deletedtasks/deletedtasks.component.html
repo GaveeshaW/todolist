@@ -1,5 +1,6 @@
 <div class="task-manager-container">
-  <div class="sidebar">
+  <!--div tag for the sidebar-->
+  <div class="sidebar"> 
     <div class="profile-section">
       <img src="/avatar.png" class="profile-img" alt="Profile">
       <div class="profile-info">
@@ -11,6 +12,8 @@
       <input type="text" placeholder="Search..." class="search-input" [(ngModel)]="searchQuery" (input)="onSearch()">
       <mat-icon class="search-icon">search</mat-icon>
     </div>
+    <!--using angular material's nav list to add the five tabs-->
+    <!--using other angular materials as well for icons, list items and divider-->
     <mat-nav-list>
       <mat-list-item class="list" routerLink="/main" [ngClass]="{'active': activeRoute === '/main'}">
         <mat-icon>home</mat-icon>
@@ -35,6 +38,8 @@
     </mat-nav-list>
     <mat-divider class="divider"></mat-divider>
   </div>
+  <!--div tag for content where the current date, tasks will be displayed-->
+  <!--added restore option as well-->
   <div class="content">
     <h1 class="myday">Deleted Tasks</h1>
     <p class="date">{{ currentDate }}</p>

@@ -1,3 +1,4 @@
+//importing necessary modules
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrl: './deletedtasks.component.css'
 })
 
+//defining DeletedTasksComponent module
 export class DeletedtasksComponent {
   tasks: { name: string; completed?: boolean; important?: boolean }[] = [];
   signupForm: FormGroup;
@@ -20,7 +22,7 @@ export class DeletedtasksComponent {
   filteredTasks = [...this.tasks];
 
   deletedTasks: { name: string; completed?: boolean; important?: boolean }[] = [];
-
+  //dfining the constructor
   constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
@@ -40,35 +42,28 @@ export class DeletedtasksComponent {
 
     this.loadDeletedTasks();
   }
-
+  //to load the deleted tasks from the local storage
   loadDeletedTasks(): void {
     const storedDeletedTasks = localStorage.getItem('deletedTasks');
     if(storedDeletedTasks) {
       this.deletedTasks = JSON.parse(storedDeletedTasks);
     }
   }
-
+  //restore to main tasks the deleted task
   restoreTask(task: any): void {
     this.deletedTasks = this.deletedTasks.filter(t => t !== task);
     this.updateDeletedTasksStorage();
     this.restoreToMainTasks(task);
   }
-
+  //update the deleted tasks on he local storage
   updateDeletedTasksStorage(): void {
     localStorage.setItem('deletedTasks', JSON.stringify(this.deletedTasks));
   }
-
+  //restore the deleted task on the main tasks array and update on local storage
   restoreToMainTasks(task: any): void {
     const mainTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
     mainTasks.unshift(task);
     localStorage.setItem('tasks', JSON.stringify(mainTasks));
-  }
-
-  onSubmit() {
-    if(this.signupForm.valid) {
-      this.userName = this.signupForm.get('name')?.value;
-      this.userEmail = this.signupForm.get('email')?.value;
-    }
   }
 
   onSearch(): void {
