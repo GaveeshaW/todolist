@@ -8,7 +8,7 @@ import { ImportantComponent } from './important/important.component';
 import { PlannedComponent } from './planned/planned.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { DeletedtasksComponent } from './deletedtasks/deletedtasks.component';
-
+//all the routes are declared here which makes switcinf from one tab to another possible
 const routes: Routes = [
   { path: '', redirectTo: '/task', pathMatch: 'full' },
   { path: 'task' , component: TaskComponent },

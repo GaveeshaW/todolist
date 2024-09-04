@@ -11,6 +11,7 @@
       <input type="text" placeholder="Search..." class="search-input" [(ngModel)]="searchQuery" (input)="onSearch()">
       <mat-icon class="search-icon">search</mat-icon>
     </div>
+    <!--material ui list for the sidebar with all the options-->
     <mat-nav-list>
       <mat-list-item class="list" routerLink="/main" [ngClass]="{'active': activeRoute === '/main'}">
         <mat-icon>home</mat-icon>
@@ -20,6 +21,7 @@
         <mat-icon>star</mat-icon>
         <span>  Important  </span>
       </mat-list-item>
+      <!--uses ng material ui such as mat icon, mat list item-->
       <mat-list-item class="list" routerLink="/planned" [ngClass]="{'active': activeRoute === '/planned'}">
         <mat-icon>event</mat-icon>
         <span>  Add To-Do  </span>
@@ -35,14 +37,17 @@
     </mat-nav-list>
     <mat-divider class="divider"></mat-divider>
   </div>
+  <!--div class to add content-->
   <div class="content">
     <h1 class="myday">My Day</h1>
     <p class="date">{{ currentDate }}</p>
     <div class="tasks-container">
+      <!---->
       <div class="task-item" *ngFor="let task of filteredTasks; let i = index">
         <input type="checkbox" id="task-checkbox" class="task" (change)="toggleTaskCompletion(task)" [checked]="task.completed" />
         <label for="task-checkbox-{{task.name}}">{{task.name}}</label>
         <div class="icons">
+          <!--the two icon buttond to mark a task as important and the other to delete the task-->
           <button mat-icon-button (click)="toggleImportant(task)">
             <mat-icon class="star-icon">{{ task.important ? 'star' : 'star_border' }}</mat-icon>
           </button>
@@ -52,6 +57,7 @@
         </div>
       </div>
     </div>
+    <!--add a task button-->
     <button mat-button class="add-task-button custom-button" (click)="addTask()">+ Add a task</button>
   </div>
 </div>

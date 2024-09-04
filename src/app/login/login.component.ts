@@ -1,3 +1,4 @@
+//import necessaty modules
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,11 +24,13 @@ import { CommonModule } from '@angular/common';
     FormsModule
   ]
 })
+//the class LoginComponent
 export class LoginComponent {
   credentials = { email: '', password: '' };
   loginForm: FormGroup;
   errorMessage: string | null = null;
 
+  //the constructor
   constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,6 +38,7 @@ export class LoginComponent {
     });
   }
 
+  //when the form is submitted, this should happen
   onSubmit() {
     this.errorMessage = null;
     if (this.loginForm.invalid) {

@@ -1,3 +1,4 @@
+//import the necessary modules
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './planned.component.html',
   styleUrl: './planned.component.css'
 })
+//class PlannedComponent implement oninit to ensure that all initializations and data loading are done before component displayed to user
 export class PlannedComponent implements OnInit{
 
   tasks: { name: string; completed?: boolean; important?: boolean }[] = [];
@@ -20,7 +22,7 @@ export class PlannedComponent implements OnInit{
   currentDate: string = '';
   activeRoute: string = '';
   isImportant: boolean = false;
-
+  //the constructor
   constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
@@ -42,14 +44,7 @@ export class PlannedComponent implements OnInit{
     this.userEmail = localStorage.getItem('userEmail') || '';
     this.currentDate = formatDate(new Date(), 'fullDate', 'en-US');
   }
-
-  onSubmit() {
-    if(this.signupForm.valid) {
-      this.userName = this.signupForm.get('name')?.value;
-      this.userEmail = this.signupForm.get('email')?.value;
-    }
-  }
-
+  //method written to add the task
   addTask() {
     if (this.toDoForm.valid) {
       const taskName = this.toDoForm.get('task')?.value;
@@ -59,26 +54,22 @@ export class PlannedComponent implements OnInit{
       this.isImportant = false;
     }
   }
-
-  toggleImportant(task: any): void {
-    task.important = !task.important;
-  }
-
+  //the icon which is used to mark the task as importnant or not
   toggleStar() {
     this.isImportant = !this.isImportant;
   }
-
+  //ethod used to save the tasks to storage
   saveTasksToStorage(): void {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
-
+  //the method used to clear the form which is used in the cancek button
   clearForm() {
     this.toDoForm.reset({
       task: ''
     });
     this.isImportant = false;
   }
-
+  //method used to submit the form when the add the task button is added
   submit() {
     const taskName = this.toDoForm.get('task')?.value;
     const storedTasks = localStorage.getItem('tasks');

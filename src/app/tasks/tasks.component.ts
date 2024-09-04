@@ -1,3 +1,4 @@
+//import necessary modules
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
+//class TasksComponent implements OnInit 
 export class TasksComponent implements OnInit {
 
   tasks: { name: string; completed?: boolean; important?: boolean; editable?: boolean }[] = [];
@@ -43,7 +45,7 @@ export class TasksComponent implements OnInit {
       this.filteredTasks = [...this.tasks];
     }
   }
-
+  //checks if the task is marked as compketed or not
   toggleTaskCompletion(task: any): void {
     const index = this.tasks.indexOf(task);
     if (index > -1) {
@@ -54,28 +56,28 @@ export class TasksComponent implements OnInit {
       this.saveTasksToStorage();
     }
   }
-
+  //save the tasks to storagr
   saveTasksToStorage(): void {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
-
+  //method to update the local storage
   updateLocalStorage(): void {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
-
+  //save the deleted tasks to localstorage so that they can be displayed in the deleted tasks section
   saveDeletedTask(task: any): void {
     const deletedTasks = JSON.parse(localStorage.getItem('deletedTasks') || '[]');
     deletedTasks.unshift(task);
     localStorage.setItem('deletedTasks', JSON.stringify(deletedTasks));
   }
-
+  //method to delete a task
   deleteTask(index: number): void {
     const deletedTask = this.tasks.splice(index, 1)[0];
     this.updateLocalStorage();
     this.saveDeletedTask(deletedTask);
     this.onSearch();
   }
-
+  //method to search a task using the search bar
   onSearch(): void {
     if (this.searchQuery) {
       this.filteredTasks = this.tasks.filter(task =>
@@ -85,7 +87,7 @@ export class TasksComponent implements OnInit {
       this.filteredTasks = [...this.tasks];
     }
   }
-
+  //method used to filter the task and see if the task is importnt or not
   filterTasks(): void {
     if (this.showImportant) {
       this.filteredTasks = this.tasks.filter(task => task.important);
@@ -93,34 +95,23 @@ export class TasksComponent implements OnInit {
       this.filteredTasks = [...this.tasks];
     }
   }
-
+  //method to check if the task is importnat or nti
   toggleImportantTasks(): void {
     this.showImportant = !this.showImportant;
     this.filterTasks();
   }
-
+  //method to check the task's importnce and save it to local stoage
   toggleImportant(task: any): void {
     task.important = !task.important;
     this.saveTasksToStorage();
     this.filterTasks();
   }
-
-  onTaskClick(task: any): void {
-    task.editable = true; // Make the task editable
-  }
-
+  //method used to update the task
   updateTask(task: any, event: Event): void {
     const target = event.target as HTMLElement;
     if (target && target.innerText !== null) {
       task.name = target.innerText;
       this.saveTasksToStorage();
     }
-  }  
-  
-  onSubmit() {
-    if (this.signupForm.valid) {
-      this.userName = this.signupForm.get('name')?.value;
-      this.userEmail = this.signupForm.get('email')?.value;
-    }
-  }
+  } 
 }

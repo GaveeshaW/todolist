@@ -1,3 +1,4 @@
+//importing necessary modules
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +9,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './important.component.html',
   styleUrls: ['./important.component.css']
 })
+
+//defining importantcomponent module
 export class ImportantComponent implements OnInit {
   
   importantTasks: { name: string; completed?: boolean; important?: boolean }[] = [];
@@ -21,6 +24,7 @@ export class ImportantComponent implements OnInit {
   showImportant: boolean = false;
   activeRoute: string = '';
 
+  //defining the constructor
   constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
@@ -28,6 +32,7 @@ export class ImportantComponent implements OnInit {
     });
   }
 
+  //to load important tasks from the local storage
   loadImportantTasks(): void {
     const storedTasks = localStorage.getItem('tasks');
     if (storedTasks) {
@@ -37,10 +42,12 @@ export class ImportantComponent implements OnInit {
     }
   }
 
+  //save the tasks to local storage
   saveTasksToStorage(): void {
     localStorage.setItem('tasks', JSON.stringify(this.allTasks));
   }
 
+  //to check if the task is completed or not
   toggleTaskCompletion(task: any): void {
     const index = this.importantTasks.indexOf(task);
     if (index > -1) {
@@ -53,6 +60,7 @@ export class ImportantComponent implements OnInit {
     }
   }
 
+  //add this task update the task list
   updateMainTaskList(updatedTask: any): void {
     const taskIndex = this.allTasks.findIndex(task => task.name === updatedTask.name);
     if (taskIndex > -1) {
@@ -60,10 +68,12 @@ export class ImportantComponent implements OnInit {
     }
   }
 
+  //to filter the important tasks 
   filterTasks(): void {
     this.filteredTasks = this.importantTasks.filter(task => task.important);
   }
 
+  //to mark and check if the task is important or not
   toggleImportant(task: any): void {
     task.important = !task.important;
     this.updateMainTaskList(task);
@@ -78,6 +88,7 @@ export class ImportantComponent implements OnInit {
     this.saveTasksToStorage();
   }
 
+  //show and display the important tasks
   toggleImportantTasks(): void {
     this.showImportant = !this.showImportant;
     this.filterTasks();
@@ -95,6 +106,7 @@ export class ImportantComponent implements OnInit {
     this.loadImportantTasks();
   }
 
+  //to add a task
   addTask(): void {
     const taskName = window.prompt('Enter the task name: ');
     if(taskName && taskName.trim()) {

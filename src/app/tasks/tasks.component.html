@@ -7,6 +7,7 @@
         <p class="uemail">{{ userEmail }}</p>
       </div>
     </div>
+    <!--div class for the search bar-->
     <div class="search-bar">
       <input type="text" placeholder="Search..." class="search-input">
       <mat-icon class="search-icon">search</mat-icon>
@@ -39,6 +40,7 @@
     <h1 class="myday">Edit To-Do</h1>
     <p class="date">{{ currentDate }}</p>
     <div class="tasks-container">
+      <!--edit the task here-->
       <div class="task-item" *ngFor="let task of filteredTasks; let i = index">
         <input type="checkbox" id="task-checkbox" class="task" (change)="toggleTaskCompletion(task)" [checked]="task.completed" />
         <div class="editable-task" contenteditable="true" (blur)="updateTask(task, $event)">

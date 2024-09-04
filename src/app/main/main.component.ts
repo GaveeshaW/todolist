@@ -1,3 +1,4 @@
+//import necessary modules
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +9,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
+//class maincomponent implements oninit to ensure that all initializations and data loading are done just before the component is 
+//displayed to the user
 export class MainComponent implements OnInit {
 
   tasks: { name: string; completed?: boolean; important?: boolean }[] = [];
@@ -20,14 +23,14 @@ export class MainComponent implements OnInit {
   searchQuery: string = '';
   showImportant: boolean = false;
   activeRoute: string = '';
-
+  //the constructor
   constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]]
     })
   }
-
+  
   ngOnInit(): void {
     this.activeRoute = this.router.url;
     this.router.events.subscribe(() => {
@@ -44,14 +47,7 @@ export class MainComponent implements OnInit {
     this.currentDate = formatDate(new Date(), 'fullDate', 'en-US');
     this.loadTasksFromStorage();
   }
-
-  onSubmit(): void {
-    if(this.signupForm.valid) {
-      this.userName = this.signupForm.get('name')?.value;
-      this.userEmail = this.signupForm.get('email')?.value;
-    }
-  }
-
+  //load the tasks from storage
   loadTasksFromStorage(): void {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
@@ -59,20 +55,20 @@ export class MainComponent implements OnInit {
       this.filteredTasks = [...this.tasks];
     }
   }
-
+  //save the deleted tasks in localstorage
   saveDeletedTask(task: any): void {
     const deletedTasks = JSON.parse(localStorage.getItem('deletedTasks') || '[]');
     deletedTasks.unshift(task);
     localStorage.setItem('deletedTasks', JSON.stringify(deletedTasks));
   }
-
+  //method to delete the task
   deleteTask(index: number): void {
     const deletedTask = this.tasks.splice(index, 1)[0];
     this.updateLocalStorage();
     this.saveDeletedTask(deletedTask);
     this.onSearch();
   }
-
+  //search bar feature
   onSearch(): void {
     if (this.searchQuery) {
       this.filteredTasks = this.tasks.filter(task =>
@@ -82,14 +78,15 @@ export class MainComponent implements OnInit {
       this.filteredTasks = [...this.tasks];
     }
   }
+  //method to save the tasks to storage
   saveTasksToStorage(): void {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
-  
+  //method to update the local storage with the existing tasks
   updateLocalStorage(): void {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
-
+  //to mark a task as done or not
   toggleTaskCompletion(task: any): void {
     const index = this.tasks.indexOf(task);
     if(index > -1) {
@@ -100,18 +97,18 @@ export class MainComponent implements OnInit {
       localStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
   }
-
+  //filter the important tasks
   toggleImportantTasks(): void {
     this.showImportant = !this.showImportant;
     this.filterTasks();
   }
-
+  //to save the important tasks to localstorage
   toggleImportant(task: any): void {
     task.important = !task.important;
     this.saveTasksToStorage();
     this.filterTasks();
   }
-
+  //to filter if the tasks are impirtrant or nt
   filterTasks(): void {
     if(this.showImportant) {
       this.filteredTasks = this.tasks.filter(task => task.important);
@@ -119,7 +116,7 @@ export class MainComponent implements OnInit {
       this.filteredTasks = [...this.tasks];
     }
   }
-
+  //method ti add a task
   addTask(): void {
     const taskName = window.prompt('Enter the task name: ');
     if(taskName && taskName.trim()) {
