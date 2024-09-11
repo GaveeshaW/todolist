@@ -9,6 +9,7 @@ import { AuthService } from '../auth.service';
 import { FormsModule, ReactiveFormsModule, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { PasswordErrorStateMatcher } from './PasswordErrorStateMatcher';
 import { CommonModule } from '@angular/common';
+import axios from 'axios';
 
 //the component with the selector, template, css and the imports
 @Component({

@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import axios from 'axios';
+import { TaskService } from '../task.service';
+import { Task } from '../task.model';
 
 @Component({
   selector: 'app-important',
@@ -25,7 +28,7 @@ export class ImportantComponent implements OnInit {
   activeRoute: string = '';
 
   //defining the constructor
-  constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private taskService: TaskService) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]]
@@ -34,13 +37,22 @@ export class ImportantComponent implements OnInit {
 
   //to load important tasks from the local storage
   loadImportantTasks(): void {
-    const storedTasks = localStorage.getItem('tasks');
-    if (storedTasks) {
-      this.allTasks = JSON.parse(storedTasks);
-      this.importantTasks = this.allTasks.filter(task => task.important);
-      this.filteredTasks = [...this.importantTasks];
-    }
+    this.taskService.getTasks().subscribe(
+      (tasks) => {
+        this.allTasks = tasks.map((task: any) => ({
+          name: task.description,
+          completed: task.isCompleted,
+          important: task.isImportant
+        }));
+        this.importantTasks = this.allTasks.filter(task => task.important);
+        this.filteredTasks = [...this.importantTasks];
+      },
+      (error) => {
+        console.error('Error loading important tasks:', error);
+      }
+    );
   }
+  
 
   //save the tasks to local storage
   saveTasksToStorage(): void {
