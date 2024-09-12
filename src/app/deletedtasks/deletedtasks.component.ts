@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import axios from 'axios';
+import { TaskService } from '../task.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-deletedtasks',
@@ -24,7 +25,7 @@ export class DeletedtasksComponent {
 
   deletedTasks: { name: string; completed?: boolean; important?: boolean }[] = [];
   //dfining the constructor
-  constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private taskService: TaskService, private cdr: ChangeDetectorRef) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]]
@@ -45,17 +46,35 @@ export class DeletedtasksComponent {
   }
   //to load the deleted tasks from the local storage
   loadDeletedTasks(): void {
-    const storedDeletedTasks = localStorage.getItem('deletedTasks');
-    if(storedDeletedTasks) {
-      this.deletedTasks = JSON.parse(storedDeletedTasks);
-    }
-  }
+    this.taskService.getDeletedTasks().subscribe(
+      (tasks) => {
+        this.deletedTasks = tasks.map((task: any) => ({
+          name: task.description,
+          completed: task.isCompleted,
+          important: task.isImportant
+        }));
+        this.filteredTasks = [...this.deletedTasks];
+      },
+      (error) => {
+        console.error('Error loading deleted tasks:', error);
+      }
+    );
+  }  
   //restore to main tasks the deleted task
   restoreTask(task: any): void {
-    this.deletedTasks = this.deletedTasks.filter(t => t !== task);
-    this.updateDeletedTasksStorage();
-    this.restoreToMainTasks(task);
+    this.taskService.restoreTask(task._id).subscribe(
+      () => {
+        this.deletedTasks = this.deletedTasks.filter(t => t !== task);
+        this.updateDeletedTasksStorage();
+        this.restoreToMainTasks(task);
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Error restoring task:', error);
+      }
+    );
   }
+  
   //update the deleted tasks on he local storage
   updateDeletedTasksStorage(): void {
     localStorage.setItem('deletedTasks', JSON.stringify(this.deletedTasks));

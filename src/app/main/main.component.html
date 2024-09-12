@@ -51,7 +51,7 @@
           <button mat-icon-button (click)="toggleImportant(task)">
             <mat-icon class="star-icon">{{ task.important ? 'star' : 'star_border' }}</mat-icon>
           </button>          
-          <button mat-icon-button (click)="deleteTask(i)">
+          <button mat-icon-button (click)="deleteTask(task._id, i)">
             <mat-icon class="bin-icon">delete</mat-icon>
           </button>
         </div>

@@ -56,7 +56,7 @@ app.post('/api/signup', (req, res) => {
 
     const hashedPassword = bcrypt.hashSync(password, 8);
     const newUser = {
-        id: new mongoose.Types.ObjectId(), // Use 'new' keyword here
+        id: new mongoose.Types.ObjectId(), 
         email,
         password: hashedPassword
     };
@@ -89,7 +89,7 @@ app.post('/api/tasks', authenticateToken, async (req, res) => {
             description,
             isImportant,
             isCompleted,
-            userId: new mongoose.Types.ObjectId(req.userId) // Use 'new' keyword here
+            userId: new mongoose.Types.ObjectId(req.userId) 
         });
 
         const savedTask = await newTask.save();
@@ -103,7 +103,7 @@ app.post('/api/tasks', authenticateToken, async (req, res) => {
 // Fetch Tasks
 app.get('/api/tasks', authenticateToken, async (req, res) => {
     try {
-        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId) }); // Use 'new' keyword here
+        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId) }).sort({ createdAt: -1 }); 
         res.status(200).send(tasks);
     } catch (err) {
         console.error('Error fetching tasks:', err);
@@ -116,13 +116,16 @@ app.put('/api/tasks/:id', authenticateToken, async (req, res) => {
     const { description, isImportant, isCompleted } = req.body;
     const taskId = req.params.id;
 
+    console.log('Request body:', req.body);  // Add this line to inspect incoming data
+    console.log('Task ID:', taskId);
+
     if (!description || isImportant === undefined || isCompleted === undefined) {
         return res.status(400).send({ message: 'Missing required task fields' });
     }
 
     try {
         const updatedTask = await Task.findOneAndUpdate(
-            { _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) }, // Use 'new' keyword here
+            { _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) }, 
             { description, isImportant, isCompleted },
             { new: true }
         );
@@ -130,28 +133,66 @@ app.put('/api/tasks/:id', authenticateToken, async (req, res) => {
         if (!updatedTask) {
             return res.status(404).send({ message: 'Task not found or not authorized' });
         }
-        res.status(200).send({ message: 'Task updated successfully', task: updatedTask });
+        res.status(200).send({ updatedTask });
     } catch (err) {
         console.error('Error updating task:', err);
         return res.status(500).send({ message: 'Error updating task' });
     }
 });
 
-// Delete a Task
-app.delete('/api/tasks/:id', authenticateToken, async (req, res) => {
-    try {
-        const taskId = req.params.id;
-        const task = await Task.findOneAndDelete({ _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) }); // Use 'new' keyword here
+// Delete a Task (soft delete)
+app.put('/api/tasks/:id/delete', authenticateToken, async (req, res) => {
+    const taskId = req.params.id;
 
-        if (!task) {
-            return res.status(404).send({ message: 'Task not found or not authorized to delete this task' });
+    try {
+        const updatedTask = await Task.findOneAndUpdate(
+            { _id: taskId, userId: req.userId },
+            { isDeleted: true },
+            { new: true }
+        );
+
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found or not authorized to delete this task' });
         }
-        res.status(200).send({ message: 'Task deleted successfully' });
+        res.status(200).json({ message: 'Task deleted successfully', task: updatedTask });
     } catch (err) {
         console.error('Error deleting task:', err);
-        return res.status(500).send({ message: 'Error deleting task' });
+        return res.status(500).json({ message: 'Error deleting task' });
     }
 });
+
+// Fetch Deleted Tasks
+app.get('/api/tasks/deleted-tasks', authenticateToken, async (req, res) => {
+    try {
+        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId), isDeleted: true }).sort({ updatedAt: -1 });
+        res.status(200).send(tasks);
+    } catch (err) {
+        console.error('Error fetching deleted tasks:', err);
+        return res.status(500).send({ message: 'Error fetching deleted tasks' });
+    }
+});
+
+// Restore a Task
+app.put('/api/tasks/:id/restore', authenticateToken, async (req, res) => {
+    const taskId = req.params.id;
+
+    try {
+        const updatedTask = await Task.findOneAndUpdate(
+            { _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) },
+            { isDeleted: false },
+            { new: true }
+        );
+
+        if (!updatedTask) {
+            return res.status(404).send({ message: 'Task not found or not authorized to restore this task' });
+        }
+        res.status(200).send(updatedTask);
+    } catch (err) {
+        console.error('Error updating task:', err);
+        return res.status(500).send({ message: 'Error updating task' });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

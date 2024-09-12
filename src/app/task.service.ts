@@ -35,14 +35,31 @@ export class TaskService {
   }
 
   // Delete task (Optional if needed later)
+  // In task.service.ts
   deleteTask(taskId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${taskId}`, { headers: this.getAuthHeaders() });
+    return this.http.put(`${this.apiUrl}/${taskId}/delete`, {});
+  }    
+
+  restoreTask(id: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/restore`, {});
   }
 
-  updateTask(task: any): Observable<any> {
-  if (!task.id) {
-    throw new Error('Task ID is missing');
+  // In task.service.ts
+  getDeletedTasks(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/deleted-tasks`);
   }
-    return this.http.put(`/api/tasks/${task.id}`, task);
+
+  updateTask(taskId: string, updatedData: any): Observable<any> {
+    if (!taskId) {
+      throw new Error('Task ID is missing');
+    }
+  
+    const payload = {
+      description: updatedData.name || '',  // Map 'name' to 'description'
+      isImportant: updatedData.important !== undefined ? updatedData.important : false, // Map 'important' to 'isImportant'
+      isCompleted: updatedData.completed !== undefined ? updatedData.completed : false // Ensure 'completed' is mapped correctly
+    };
+  
+    return this.http.put(`${this.apiUrl}/${taskId}`, payload, { headers: this.getAuthHeaders() });
   }
 }

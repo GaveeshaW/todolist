@@ -14,9 +14,9 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  tasks: { name: string; completed?: boolean; important?: boolean; isDeleted?: boolean }[] = [];
+  tasks: { name: string; completed?: boolean; important?: boolean; isDeleted?: boolean, _id: string }[] = [];
   filteredTasks = [...this.tasks];
-  deletedTasks: { name: string; completed?: boolean; important?: boolean }[] = [];
+  deletedTasks: { name: string; completed?: boolean; important?: boolean, _id: string }[] = [];
   signupForm: FormGroup;
   userName: string = '';
   userEmail: string = '';
@@ -52,37 +52,48 @@ export class MainComponent implements OnInit {
     this.currentDate = formatDate(new Date(), 'fullDate', 'en-US');
   }
 
-  // "Delete" a task by marking it as deleted
-  deleteTask(index: number): void {
-    const taskToDelete = this.tasks[index];
+  loadDeletedTasks(): void {
+    this.taskService.getDeletedTasks().subscribe(
+      (tasks: any[]) => {
+        this.deletedTasks = tasks.map(task => ({
+          name: task.description,
+          completed: task.isCompleted,
+          important: task.isImportant,
+          _id: task._id // Corrected to _id to match the usual MongoDB field
+        }));
+        this.filteredTasks = [...this.deletedTasks]; // Update the filtered task list
+      },
+      (error) => {
+        console.error('Error loading deleted tasks:', error);
+        alert(`An error occurred: ${error.message}`);
+      }
+    );    
+  }  
 
-    // Mark the task as deleted and update the database
-    this.taskService.updateTask({
-      ...taskToDelete, isDeleted: true,
-      description: '',
-      isImportant: '',
-      isCompleted: false
-    }).subscribe(
-      (response) => {
-        this.tasks.splice(index, 1);
-        this.filteredTasks = [...this.tasks];
-        this.deletedTasks.unshift(response); // Add the task to the deleted tasks list
-        this.onSearch();
-        this.cdr.detectChanges();
+  // "Delete" a task by marking it as deleted
+  deleteTask(taskId: string, index: number): void {
+    // Call the delete API to soft-delete the task
+    this.taskService.deleteTask(taskId).subscribe(
+      () => {
+        // Remove the task from the tasks array after successful deletion
+        this.tasks.splice(index, 1); // Remove the task at the specific index
+        this.filteredTasks = [...this.tasks]; // Update the filtered tasks array
       },
       (error) => {
         console.error('Error deleting task:', error);
+        alert(`An error occurred: ${error.message}`);
       }
     );
-  }
+  }   
 
   // Restore a deleted task
   restoreTask(index: number): void {
     const taskToRestore = this.deletedTasks[index];
-
+  
     // Mark the task as not deleted and update the database
-    this.taskService.updateTask({
-      ...taskToRestore, isDeleted: false,
+    this.taskService.updateTask(taskToRestore._id, {
+      ...taskToRestore,
+      isDeleted: false,
       description: '',
       isImportant: '',
       isCompleted: false
@@ -111,20 +122,14 @@ export class MainComponent implements OnInit {
 
   toggleTaskCompletion(task: any): void {
     task.completed = !task.completed;
-
-    // Update the task completion status in the database
-    this.taskService.updateTask(task).subscribe(
-      (response) => {
-        const index = this.tasks.indexOf(task);
-        if (index > -1) {
-          this.tasks.splice(index, 1);
-          this.tasks.unshift(response); // Ensure the task is shown at the top
-          this.filteredTasks = [...this.tasks];
-          this.cdr.detectChanges();
-        }
+  
+    this.taskService.updateTask(task._id, task).subscribe(
+      () => {  
+        this.filterTasks();
       },
       (error) => {
         console.error('Error updating task:', error);
+        alert(`An error occurred: ${error.message}`);
       }
     );
   }
@@ -136,17 +141,17 @@ export class MainComponent implements OnInit {
 
   toggleImportant(task: any): void {
     task.important = !task.important;
-
-    // Update the task importance status in the database
-    this.taskService.updateTask(task).subscribe(
-      (response) => {
+  
+    this.taskService.updateTask(task._id, task).subscribe(
+      () => {  
         this.filterTasks();
       },
       (error) => {
         console.error('Error updating task:', error);
+        alert(`An error occurred: ${error.message}`);
       }
     );
-  }
+  }  
 
   filterTasks(): void {
     if (this.showImportant) {
@@ -160,9 +165,11 @@ export class MainComponent implements OnInit {
     this.taskService.getTasks().subscribe(
       (tasks) => {
         this.tasks = tasks.map((task: any) => ({
+          _id: task._id,
           name: task.description,
           completed: task.isCompleted,
-          important: task.isImportant
+          important: task.isImportant,
+          isDeleted: task.isDeleted
         }));
         this.filteredTasks = [...this.tasks];
         this.cdr.detectChanges();  // Trigger change detection
@@ -176,14 +183,15 @@ export class MainComponent implements OnInit {
   addTask(): void {
     const taskName = window.prompt('Enter the task name: ');
     if (taskName && taskName.trim()) {
-      const newTask = { _id: '', name: taskName.trim(), description: taskName.trim(), isImportant: false, isCompleted: false, isDeleted: false };
+      const newTask = { _id: '', description: taskName.trim(), isImportant: false, isCompleted: false, isDeleted: false };
 
       // Add the task to the database via the TaskService
       this.taskService.addTask(newTask).subscribe(
         (response) => {
           // Add the new task to the top of the array
           this.tasks.unshift({
-            name: response.description,  // Ensure the task description is added
+            name: response.description,  
+            _id: response._id,
             completed: response.isCompleted,
             important: response.isImportant
           });
