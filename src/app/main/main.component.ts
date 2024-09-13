@@ -14,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  tasks: { name: string; completed?: boolean; important?: boolean; isDeleted?: boolean, _id: string }[] = [];
+  tasks: { name: string; completed?: boolean; important?: boolean; deleted?: boolean, _id: string }[] = [];
   filteredTasks = [...this.tasks];
   deletedTasks: { name: string; completed?: boolean; important?: boolean, _id: string }[] = [];
   signupForm: FormGroup;
@@ -93,7 +93,7 @@ export class MainComponent implements OnInit {
     // Mark the task as not deleted and update the database
     this.taskService.updateTask(taskToRestore._id, {
       ...taskToRestore,
-      isDeleted: false,
+      deleted: false,
       description: '',
       isImportant: '',
       isCompleted: false
@@ -164,21 +164,24 @@ export class MainComponent implements OnInit {
   loadTasksFromDB(): void {
     this.taskService.getTasks().subscribe(
       (tasks) => {
-        this.tasks = tasks.map((task: any) => ({
-          _id: task._id,
-          name: task.description,
-          completed: task.isCompleted,
-          important: task.isImportant,
-          isDeleted: task.isDeleted
-        }));
+        this.tasks = tasks
+          .filter((task: any) => !task.isDeleted)
+          .map((task: any) => ({
+            _id: task._id,
+            name: task.description,
+            completed: task.isCompleted,
+            important: task.isImportant,
+            deleted: task.isDeleted
+          }));
+  
         this.filteredTasks = [...this.tasks];
-        this.cdr.detectChanges();  // Trigger change detection
+        this.cdr.detectChanges(); // Trigger change detection
       },
       (error) => {
         console.error('Error loading tasks:', error);
       }
     );
-  }
+  }  
 
   addTask(): void {
     const taskName = window.prompt('Enter the task name: ');

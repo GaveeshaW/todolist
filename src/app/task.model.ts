@@ -3,5 +3,5 @@ export interface Task {
   description: string;
   isImportant: boolean;
   isCompleted: boolean;
-  isDeleted?: boolean;
+  deleted?: boolean;
 }

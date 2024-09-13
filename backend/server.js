@@ -103,7 +103,7 @@ app.post('/api/tasks', authenticateToken, async (req, res) => {
 // Fetch Tasks
 app.get('/api/tasks', authenticateToken, async (req, res) => {
     try {
-        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId) }).sort({ createdAt: -1 }); 
+        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId), deleted: false}).sort({ createdAt: -1 }); 
         res.status(200).send(tasks);
     } catch (err) {
         console.error('Error fetching tasks:', err);
@@ -146,25 +146,25 @@ app.put('/api/tasks/:id/delete', authenticateToken, async (req, res) => {
 
     try {
         const updatedTask = await Task.findOneAndUpdate(
-            { _id: taskId, userId: req.userId },
-            { isDeleted: true },
+            { _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) },
+            { deleted: true },
             { new: true }
         );
 
         if (!updatedTask) {
-            return res.status(404).json({ message: 'Task not found or not authorized to delete this task' });
+            return res.status(404).send({ message: 'Task not found or not authorized to delete this task' });
         }
-        res.status(200).json({ message: 'Task deleted successfully', task: updatedTask });
+        res.status(200).send(updatedTask);
     } catch (err) {
-        console.error('Error deleting task:', err);
-        return res.status(500).json({ message: 'Error deleting task' });
+        console.error('Error updating task:', err);
+        return res.status(500).send({ message: 'Error updating task' });
     }
 });
 
 // Fetch Deleted Tasks
 app.get('/api/tasks/deleted-tasks', authenticateToken, async (req, res) => {
     try {
-        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId), isDeleted: true }).sort({ updatedAt: -1 });
+        const tasks = await Task.find({ userId: new mongoose.Types.ObjectId(req.userId), deleted: true }).sort({ updatedAt: -1 });
         res.status(200).send(tasks);
     } catch (err) {
         console.error('Error fetching deleted tasks:', err);
@@ -179,7 +179,7 @@ app.put('/api/tasks/:id/restore', authenticateToken, async (req, res) => {
     try {
         const updatedTask = await Task.findOneAndUpdate(
             { _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) },
-            { isDeleted: false },
+            { deleted: false },
             { new: true }
         );
 
