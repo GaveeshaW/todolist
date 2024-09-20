@@ -1,20 +1,3 @@
-.task-manager-container {
-   display: flex;
-   height: 100vh;
-   background-image: url('/img.jpg');
-   background-size: cover;
-   color: white;
-}
- 
-.sidebar {
-   width: 300px;
-   background-color: rgba(193, 193, 193, 0.7);
-   padding: 20px;
-   margin-left: 20px;
-   margin-top: 50px;
-   height: 550px;
-}
- 
 .profile-section {
    display: flex;
    align-items: center;
@@ -59,15 +42,6 @@
    border-radius: 0%;
    background-color: rgba(217, 217, 217, 0.7);
    width: 340px;
-}
-
-.content {
-   flex-grow: 1;
-   display: flex;
-   flex-direction: column;
-   padding: 20px;
-   justify-content: space-between;
-   height: calc(100vh - 50px);
 }
 
 .formheading {
@@ -248,4 +222,206 @@ label {
    cursor: pointer;
    color: white;
    font-size: 24px;
+}
+
+/* Global Styles */
+body {
+   margin: 0;
+   font-family: Arial, sans-serif;
+   box-sizing: border-box;
+}
+ 
+/* Flexbox container for task manager */
+.task-manager-container {
+   display: flex;
+   flex-direction: row;
+   height: 100vh;
+   background-image: url('/img.jpg');
+   background-size: cover;
+   color: white;
+}
+ 
+/* Sidebar styles */
+.sidebar {
+   width: 300px;
+   background-color: rgba(193, 193, 193, 0.7);
+   padding: 20px;
+   margin-left: 20px;
+   margin-top: 50px;
+   height: 550px;
+   transition: transform 0.3s ease;
+}
+ 
+.profile-section {
+   display: flex;
+   align-items: center;
+   margin-bottom: 20px;
+}
+
+.profile-img {
+   height: 50px;
+   width: 50px;
+   border-radius: 50%;
+   margin-right: 10px;
+}
+ 
+.profile-info p {
+   margin: 0;
+   color: black;
+}
+ 
+/* Main content styles */
+.content {
+   flex-grow: 1;
+   display: flex;
+   flex-direction: column;
+   padding: 20px;
+   justify-content: space-between;
+   height: calc(100vh - 50px);
+}
+ 
+.formheading {
+   font-size: 40px;
+   text-align: center;
+}
+ 
+.myday {
+   font-size: 45px;
+   margin-top: 20px;
+   margin-bottom: 0;
+}
+ 
+.date {
+   margin-bottom: 20px;
+}
+ 
+.tasks-container {
+   flex-grow: 1;
+   overflow-y: auto;
+   margin-bottom: 20px;
+}
+ 
+.form-footer {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   align-items: center;
+}
+ 
+/* Button styles */
+.add-task-button {
+   width: 200px;
+   background-color: rgb(25, 113, 255);
+   height: 50px;
+   border-radius: 0;
+   color: white;
+}
+ 
+.cancel-button {
+   width: 200px;
+   background-color: rgb(72, 72, 72);
+   height: 50px;
+   border-radius: 0;
+   color: white;
+}
+ 
+.task-input-container {
+   display: flex;
+   align-items: center;
+   width: 500px;
+   margin-bottom: 100px;
+}
+ 
+.task-input {
+   flex-grow: 1;
+   padding: 10px;
+   border-radius: 5px;
+   border: none;
+}
+
+.menu-toggle {
+   position: absolute;
+   top: 20px;
+   left: 20px;
+   background-color: transparent;
+   border: none;
+   font-size: 24px;
+   z-index: 100;
+   cursor: pointer;
+}
+
+.menu-toggle mat-icon {
+   font-size: 32px;
+   color: white;
+}
+
+.sidebar-closed {
+   transform: translateX(-100%);
+}
+ 
+/* Media Queries for Responsive Design */
+ 
+/* Smaller devices (tablets, phones) */
+@media (max-width: 768px) {
+   .task-manager-container {
+     flex-direction: column;
+  }
+ 
+   .sidebar {
+     width: 100%;
+     margin-left: 0;
+     margin-top: 0;
+     height: auto;
+   }
+ 
+   .profile-section {
+     justify-content: center;
+   }
+ 
+   .profile-img {
+     height: 40px;
+     width: 40px;
+   }
+ 
+   .mat-nav-list {
+     display: flex;
+     flex-direction: row;
+     justify-content: space-around;
+   }
+ 
+   .mat-list-item {
+     justify-content: center;
+   }
+ 
+   .new-list-button {
+     margin-top: 50px;
+     margin-left: 0;
+     width: 100%;
+   }
+ 
+   .content {
+     padding: 10px;
+     height: auto;
+   }
+ 
+   .formheading {
+     font-size: 30px;
+   }
+ 
+   .myday {
+     font-size: 35px;
+   }
+ 
+   .task-input-container {
+     width: 100%;
+   }
+ 
+   .task-input {
+     width: 100%;
+   }
+ 
+   .addForm {
+     width: 90%;
+     height: auto;
+   }
 }

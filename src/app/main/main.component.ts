@@ -123,16 +123,16 @@ export class MainComponent implements OnInit {
   toggleTaskCompletion(task: any): void {
     task.completed = !task.completed;
   
-    this.taskService.updateTask(task._id, task).subscribe(
-      () => {  
-        this.filterTasks();
+    this.taskService.updateTask(task._id, { isCompleted: task.completed }).subscribe(
+      () => {
+        // Handle successful update
+        this.loadTasksFromDB(); // Reload important tasks to reflect changes
       },
       (error) => {
-        console.error('Error updating task:', error);
-        alert(`An error occurred: ${error.message}`);
+        console.error('Error updating task completion:', error);
       }
     );
-  }
+  }    
 
   toggleImportantTasks(): void {
     this.showImportant = !this.showImportant;
@@ -140,18 +140,18 @@ export class MainComponent implements OnInit {
   }
 
   toggleImportant(task: any): void {
-    task.important = !task.important;
+    task.important = !task.important; 
   
-    this.taskService.updateTask(task._id, task).subscribe(
+    this.taskService.updateTask(task._id, { isImportant: task.important }).subscribe(
       () => {  
-        this.filterTasks();
+        this.loadTasksFromDB(); 
       },
       (error) => {
         console.error('Error updating task:', error);
         alert(`An error occurred: ${error.message}`);
       }
     );
-  }  
+  }   
 
   filterTasks(): void {
     if (this.showImportant) {
@@ -186,7 +186,7 @@ export class MainComponent implements OnInit {
   addTask(): void {
     const taskName = window.prompt('Enter the task name: ');
     if (taskName && taskName.trim()) {
-      const newTask = { _id: '', description: taskName.trim(), isImportant: false, isCompleted: false, isDeleted: false };
+      const newTask = { _id: '', name: taskName.trim(), description: taskName.trim(), isImportant: false, isCompleted: false, isDeleted: false };
 
       // Add the task to the database via the TaskService
       this.taskService.addTask(newTask).subscribe(

@@ -42,13 +42,13 @@
     <div class="tasks-container">
       <!--edit the task here-->
       <div class="task-item" *ngFor="let task of filteredTasks; let i = index">
-        <input type="checkbox" id="task-checkbox" class="task" (change)="toggleTaskCompletion(task)" [checked]="task.completed" />
+        <input type="checkbox" id="task-checkbox" class="task" (change)="toggleTaskCompletion(task)" [checked]="task.isCompleted" />
         <div class="editable-task" contenteditable="true" (blur)="updateTask(task, $event)">
           {{ task.name }}
         </div>
         <div class="icons">
           <button mat-icon-button (click)="toggleImportant(task)">
-            <mat-icon class="star-icon">{{ task.important ? 'star' : 'star_border' }}</mat-icon>
+            <mat-icon class="star-icon">{{ task.isImportant ? 'star' : 'star_border' }}</mat-icon>
           </button>
         </div>
       </div>      

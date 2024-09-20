@@ -35,7 +35,10 @@ import { MatError } from '@angular/material/form-field';
     ImportantComponent,
     PlannedComponent,
     TasksComponent,
-    DeletedtasksComponent
+    DeletedtasksComponent,
+    TaskComponent,
+    SignupComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -46,10 +49,7 @@ import { MatError } from '@angular/material/form-field';
     MatCheckboxModule,
     MatDividerModule,
     AppRoutingModule,
-    TaskComponent,
     MatNavList,
-    SignupComponent,
-    LoginComponent,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

@@ -111,34 +111,21 @@ app.get('/api/tasks', authenticateToken, async (req, res) => {
     }
 });
 
-// Edit a Task
-app.put('/api/tasks/:id', authenticateToken, async (req, res) => {
-    const { description, isImportant, isCompleted } = req.body;
+// Update task by ID
+app.put('/api/tasks/:id', async (req, res) => {
     const taskId = req.params.id;
-
-    console.log('Request body:', req.body);  // Add this line to inspect incoming data
-    console.log('Task ID:', taskId);
-
-    if (!description || isImportant === undefined || isCompleted === undefined) {
-        return res.status(400).send({ message: 'Missing required task fields' });
-    }
-
+    const updatedData = req.body; 
+  
     try {
-        const updatedTask = await Task.findOneAndUpdate(
-            { _id: new mongoose.Types.ObjectId(taskId), userId: new mongoose.Types.ObjectId(req.userId) }, 
-            { description, isImportant, isCompleted },
-            { new: true }
-        );
-
-        if (!updatedTask) {
-            return res.status(404).send({ message: 'Task not found or not authorized' });
-        }
-        res.status(200).send({ updatedTask });
-    } catch (err) {
-        console.error('Error updating task:', err);
-        return res.status(500).send({ message: 'Error updating task' });
+      const updatedTask = await Task.findByIdAndUpdate(taskId, updatedData, { new: true });
+      if (!updatedTask) {
+        return res.status(404).send('Task not found');
+      }
+      res.status(200).send(updatedTask);
+    } catch (error) {
+      res.status(500).send('Error updating task: ' + error.message);
     }
-});
+});   
 
 // Delete a Task (soft delete)
 app.put('/api/tasks/:id/delete', authenticateToken, async (req, res) => {

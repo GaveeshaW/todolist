@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import axios from 'axios';
+import { TaskService } from '../task.service';
+import { Task } from '../task.model';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-tasks',
@@ -13,8 +15,8 @@ import axios from 'axios';
 //class TasksComponent implements OnInit 
 export class TasksComponent implements OnInit {
 
-  tasks: { name: string; completed?: boolean; important?: boolean; editable?: boolean }[] = [];
-  filteredTasks: { name: string; completed?: boolean; important?: boolean; editable?: boolean }[] = [];
+  tasks: Task[] = [];
+  filteredTasks: Task[] = [];
   signupForm: FormGroup;
   userName: string = '';
   userEmail: string = '';
@@ -23,7 +25,7 @@ export class TasksComponent implements OnInit {
   searchQuery: string = '';
   showImportant: boolean = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private cdr: ChangeDetectorRef, private taskService: TaskService) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]]
@@ -31,6 +33,7 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadTasksFromDB();
     this.activeRoute = this.router.url;
     this.router.events.subscribe(() => {
       this.activeRoute = this.router.url;
@@ -39,45 +42,46 @@ export class TasksComponent implements OnInit {
     this.userName = localStorage.getItem('userName') || '';
     this.userEmail = localStorage.getItem('userEmail') || '';
     this.currentDate = formatDate(new Date(), 'fullDate', 'en-US');
-
-    const storedTasks = localStorage.getItem('tasks');
-    if (storedTasks) {
-      this.tasks = JSON.parse(storedTasks);
-      this.filteredTasks = [...this.tasks];
-    }
   }
+
+  loadTasksFromDB(): void {
+    this.taskService.getTasks().subscribe(
+      (tasks: any) => {
+        this.tasks = tasks
+          .filter((task: any) => !task.isDeleted)
+          .map((task: any) => ({
+            _id: task._id,
+            name: task.description,  // or use task.name if that's more appropriate
+            description: task.description,
+            isCompleted: task.isCompleted,
+            isImportant: task.isImportant,
+            editable: task.editable || false  // Optional field
+          }));
+  
+        this.filteredTasks = [...this.tasks];
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      (error) => {
+        console.error('Error loading tasks:', error);
+      }
+    );
+  }    
+
   //checks if the task is marked as compketed or not
   toggleTaskCompletion(task: any): void {
-    const index = this.tasks.indexOf(task);
-    if (index > -1) {
-      task.completed = !task.completed;
-      this.tasks.splice(index, 1);
-      this.tasks.unshift(task);
-      this.filteredTasks = [...this.tasks];
-      this.saveTasksToStorage();
-    }
-  }
-  //save the tasks to storagr
-  saveTasksToStorage(): void {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-  }
-  //method to update the local storage
-  updateLocalStorage(): void {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-  }
-  //save the deleted tasks to localstorage so that they can be displayed in the deleted tasks section
-  saveDeletedTask(task: any): void {
-    const deletedTasks = JSON.parse(localStorage.getItem('deletedTasks') || '[]');
-    deletedTasks.unshift(task);
-    localStorage.setItem('deletedTasks', JSON.stringify(deletedTasks));
-  }
-  //method to delete a task
-  deleteTask(index: number): void {
-    const deletedTask = this.tasks.splice(index, 1)[0];
-    this.updateLocalStorage();
-    this.saveDeletedTask(deletedTask);
-    this.onSearch();
-  }
+    task.isCompleted = !task.isCompleted;  
+  
+    this.taskService.updateTask(task._id, { isCompleted: task.isCompleted }).subscribe(
+      (updatedTask) => {
+        console.log('Task completion status updated successfully in DB:', updatedTask);
+        this.loadTasksFromDB(); 
+      },
+      (error) => {
+        console.error('Error updating task completion status in DB:', error);
+      }
+    );
+  }  
+
   //method to search a task using the search bar
   onSearch(): void {
     if (this.searchQuery) {
@@ -91,7 +95,7 @@ export class TasksComponent implements OnInit {
   //method used to filter the task and see if the task is importnt or not
   filterTasks(): void {
     if (this.showImportant) {
-      this.filteredTasks = this.tasks.filter(task => task.important);
+      this.filteredTasks = this.tasks.filter(task => task.isImportant);
     } else {
       this.filteredTasks = [...this.tasks];
     }
@@ -103,16 +107,42 @@ export class TasksComponent implements OnInit {
   }
   //method to check the task's importnce and save it to local stoage
   toggleImportant(task: any): void {
-    task.important = !task.important;
-    this.saveTasksToStorage();
-    this.filterTasks();
+    task.isImportant = !task.isImportant;
+
+    this.taskService.updateTask(task._id, { isImportant: task.isImportant }).subscribe(
+      () => {
+        this.loadTasksFromDB();
+      },
+      (error) => {
+        console.error('Error updating task importance:', error);
+      }
+    );
   }
+
   //method used to update the task
-  updateTask(task: any, event: Event): void {
+  updateTask(task: Task, event: Event): void {
     const target = event.target as HTMLElement;
     if (target && target.innerText !== null) {
       task.name = target.innerText;
-      this.saveTasksToStorage();
+
+      console.log('Updating task:', task);
+
+      const updatedData = {
+        name: task.name,
+        description: task.name,
+        isCompleted: task.isCompleted,
+        isImportant: task.isImportant
+      };
+
+      this.taskService.updateTask(task._id, updatedData).subscribe(
+        (updatedTask) => {
+          console.log('Task updated successfully in DB:', updatedTask);
+          this.loadTasksFromDB();
+        },
+        (error) => {
+          console.error('Error updating task in DB:', error);
+        }
+      );
     }
-  } 
+  }   
 }

@@ -50,16 +50,6 @@ export class TaskService {
   }
 
   updateTask(taskId: string, updatedData: any): Observable<any> {
-    if (!taskId) {
-      throw new Error('Task ID is missing');
-    }
-  
-    const payload = {
-      description: updatedData.name || '',  // Map 'name' to 'description'
-      isImportant: updatedData.important !== undefined ? updatedData.important : false, // Map 'important' to 'isImportant'
-      isCompleted: updatedData.completed !== undefined ? updatedData.completed : false // Ensure 'completed' is mapped correctly
-    };
-  
-    return this.http.put(`${this.apiUrl}/${taskId}`, payload, { headers: this.getAuthHeaders() });
-  }
+    return this.http.put(`${this.apiUrl}/${taskId}`, updatedData, { headers: this.getAuthHeaders() });
+  }    
 }
