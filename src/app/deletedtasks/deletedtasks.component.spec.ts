@@ -7,7 +7,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatNavList } from '@angular/material/list';
 import { MatDivider } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
-import { TaskService } from '../task.service';
+import { TaskService } from '../task.service'; //import TaskService to inject and mock service interactions
 
 describe('DeletedtasksComponent', () => {
   let component: DeletedtasksComponent;
@@ -17,7 +17,7 @@ describe('DeletedtasksComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
+        HttpClientTestingModule, //required to test HTTP modules
         MatIcon,
         MatNavList,
         MatDivider,

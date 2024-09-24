@@ -4,7 +4,7 @@ const taskSchema = new mongoose.Schema({
     description: String,
     isImportant: Boolean,
     isCompleted: Boolean,
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true }, // Ensure this is required
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true }, 
     deleted: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }  
 });

@@ -59,7 +59,7 @@ export class MainComponent implements OnInit {
           name: task.description,
           completed: task.isCompleted,
           important: task.isImportant,
-          _id: task._id // Corrected to _id to match the usual MongoDB field
+          _id: task._id 
         }));
         this.filteredTasks = [...this.deletedTasks]; // Update the filtered task list
       },

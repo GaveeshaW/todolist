@@ -8,9 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatNavList } from '@angular/material/list';
 import { MatDivider } from '@angular/material/divider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Task } from '../task.model';
 
 describe('MainComponent', () => {
   let component: MainComponent;

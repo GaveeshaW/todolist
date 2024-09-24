@@ -115,6 +115,10 @@ app.get('/api/tasks', authenticateToken, async (req, res) => {
 app.put('/api/tasks/:id', async (req, res) => {
     const taskId = req.params.id;
     const updatedData = req.body; 
+
+    if(!mongoose.Types.ObjectId.isValid(taskId)) {
+        return res.status(400).send("Invalid task ID format");
+    }
   
     try {
       const updatedTask = await Task.findByIdAndUpdate(taskId, updatedData, { new: true });
@@ -144,7 +148,7 @@ app.put('/api/tasks/:id/delete', authenticateToken, async (req, res) => {
         res.status(200).send(updatedTask);
     } catch (err) {
         console.error('Error updating task:', err);
-        return res.status(500).send({ message: 'Error updating task' });
+        return res.status(500).send({ message: 'Error deleting task' });
     }
 });
 
@@ -176,13 +180,8 @@ app.put('/api/tasks/:id/restore', authenticateToken, async (req, res) => {
         res.status(200).send(updatedTask);
     } catch (err) {
         console.error('Error updating task:', err);
-        return res.status(500).send({ message: 'Error updating task' });
+        return res.status(500).send({ message: 'Error restoring task' });
     }
-});
-
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
 });
 
 if(process.env.NODE_ENV !== 'test') {

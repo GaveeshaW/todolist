@@ -1,28 +1,28 @@
-const supertest = require("supertest");
-const app = require('../server');
-const mongoose = require('mongoose');
-const Task = require('../models/Task');
+const supertest = require("supertest"); //testing library
+const app = require('../server'); //import server.js
+const mongoose = require('mongoose'); //import mongoose
+const Task = require('../models/Task'); //import Task.js
 
 let authToken = '';
 
-beforeAll(async () => {
+beforeAll(async () => { //before all should connect to mongodb
     if (mongoose.connection.readyState === 0) {
         await mongoose.connect('mongodb://127.0.0.1:27017/tasknest_test');
     }
 });
 
-afterAll(async () => {
+afterAll(async () => { //after the process, diconnect mongodb
     await mongoose.disconnect();
 });
 
-describe("POST /api/signup", () => {
-    it("should successfully create a new user and return a token", async() => {
+describe("POST /api/signup", () => { //inside this link
+    it("should successfully create a new user and return a token", async() => { //have subparts to test out
         const res = await supertest(app).post("/api/signup").send({
             email: "testuser@example.com",
             password: "testpassword"
         });
         expect(res.status).toBe(201);
-        authToken = res.body.token; // Save token for other tests
+        authToken = res.body.token; 
     });
 
     it("should return an error if the user already exists", async() => {
@@ -117,10 +117,10 @@ describe("GET /api/tasks/deleted-tasks", () => {
     it("should fetch deleted tasks for the authenticated user", async () => {
         const res = await supertest(app)
             .get("/api/tasks/deleted-tasks")
-            .set("Authorization", `Bearer ${authToken}`); // Use the token from login/signup tests
+            .set("Authorization", `Bearer ${authToken}`); 
         expect(res.status).toBe(200);
         expect(res.body).toBeInstanceOf(Array);
-        // If there are deleted tasks, check that they have the deleted flag set to true
+        
         if (res.body.length > 0) {
             expect(res.body[0]).toHaveProperty("deleted", true);
         }
@@ -129,17 +129,100 @@ describe("GET /api/tasks/deleted-tasks", () => {
     it("should return an error when fetching deleted tasks without authentication", async () => {
         const res = await supertest(app)
             .get("/api/tasks/deleted-tasks");
-        expect(res.status).toBe(403); // Unauthorized due to missing token
+        expect(res.status).toBe(403); 
         expect(res.text).toBe("Token is missing");
     });
+});
 
-    it("should handle errors when fetching deleted tasks", async () => {
-        // Simulate an error in the Task.find method
-        jest.spyOn(Task, 'find').mockRejectedValueOnce(new Error('Database error'));
+describe("PUT /api/tasks/:id", () => {
+    let taskId;
+    const invalidTaskId = "xyz";
+
+    beforeAll(async () => {
+        const taskRes = await supertest(app)
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({ description: "Initial task", isImportant: false, isCompleted: false });
+        taskId = taskRes.body._id; 
+    });
+
+    it("should update the task successfully", async () => {
         const res = await supertest(app)
-            .get("/api/tasks/deleted-tasks")
+            .put(`/api/tasks/${taskId}`) 
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({ description: "Updated task description" });
+        
+        expect(res.status).toBe(200);
+        expect(res.body.description).toBe("Updated task description");
+    });
+
+    it("should return 400 for an invalid task ID", async () => {
+        const res = await supertest(app)
+            .put(`/api/tasks/${invalidTaskId}`) 
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({ description: "Updated task description" });
+    
+        expect(res.status).toBe(400);
+        expect(res.text).toBe("Invalid task ID format");
+    });    
+});
+
+describe("PUT /api/tasks/:id/delete", () => {
+    let taskId;
+
+    beforeAll(async () => {
+        const taskRes = await supertest(app)
+            .post("/api/tasks")
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({ description: "Task to delete", isImportant: false, isCompleted: false });
+        taskId = taskRes.body._id;
+    });
+
+    it("should soft delete a task successfully", async() => {
+        const res = await supertest(app)
+            .put(`/api/tasks/${taskId}/delete`)
             .set("Authorization", `Bearer ${authToken}`);
-        expect(res.status).toBe(500); // Internal server error
-        expect(res.body.message).toBe("Error fetching deleted tasks");
+        expect(res.status).toBe(200);
+        expect(res.body.deleted).toBe(true);
+        expect(res.body.description).toBe("Task to delete");
+    });
+
+    it("should display error message if an error occurs while deleting the task", async() => {
+        jest.spyOn(Task, 'findOneAndUpdate').mockImplementationOnce(() => {
+            throw new Error("Database error");
+        });
+        const res = await supertest(app)
+            .put(`/api/tasks/${taskId}/delete`)
+            .set("Authorization", `Bearer ${authToken}`);
+        expect(res.status).toBe(500);
+        expect(res.body.message).toBe("Error deleting task");
+    });
+});
+
+describe("PUT /api/tasks/:id/restore", () => {
+    let taskId;
+
+    beforeAll(async () => {
+        const taskRes = await supertest(app)
+            .put("/api/tasks")
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({ description: "Task to delete", isImportant: false, isCompleted: false });
+        taskId = taskRes.body._id;
+
+        await supertest(app)
+            .put(`/api/tasks/${taskId}/delete`)
+            .set("Authorization", `Bearer ${authToken}`);
+    });
+
+    it("should display error message if an error occurs while restoring the task", async() => {
+        jest.spyOn(Task, 'findOneAndUpdate').mockImplementationOnce(() => {
+            throw new Error('Database error');
+        });
+        const res = await supertest(app)
+            .put(`/api/tasks/${taskId}/restore`)
+            .set("Authorization", `Bearer ${authToken}`);
+        expect(res.status).toBe(500);
+        expect(res.body.message).toBe('Error restoring task');
+        Task.findOneAndUpdate.mockRestore();
     });
 });
