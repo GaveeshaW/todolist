@@ -118,7 +118,7 @@ export class ImportantComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadImportantTasks;
+    this.loadImportantTasks();
     this.activeRoute = this.router.url;
     this.router.events.subscribe(() => {
       this.activeRoute = this.router.url;
@@ -135,7 +135,7 @@ export class ImportantComponent implements OnInit {
     const taskName = window.prompt('Enter the task name: ');
     if (taskName && taskName.trim()) {
       const newTask = { _id: '', name: taskName.trim(), description: taskName.trim(), isImportant: true, isCompleted: false, isDeleted: false };
-
+      console.log('Before adding:', this.allTasks); // Log before adding
       // Add the task to the database via the TaskService
       this.taskService.addTask(newTask).subscribe(
         (response) => {
@@ -147,6 +147,7 @@ export class ImportantComponent implements OnInit {
             important: response.isImportant
           });
           this.filteredTasks = [...this.allTasks];  // Update filtered tasks
+          console.log('After adding:', this.allTasks); // Log after adding
           this.loadImportantTasks();
           this.cdr.detectChanges();  // Trigger change detection to render the new task
         },

@@ -35,10 +35,7 @@ import { MatError } from '@angular/material/form-field';
     ImportantComponent,
     PlannedComponent,
     TasksComponent,
-    DeletedtasksComponent,
-    TaskComponent,
-    SignupComponent,
-    LoginComponent
+    DeletedtasksComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +53,10 @@ import { MatError } from '@angular/material/form-field';
     RouterModule,
     MatFormField,
     MatLabel,
-    MatError
+    MatError,
+    TaskComponent,
+    SignupComponent,
+    LoginComponent
   ],
   providers: [
     provideClientHydration(),

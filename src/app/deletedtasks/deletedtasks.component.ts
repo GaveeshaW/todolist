@@ -88,8 +88,8 @@ export class DeletedtasksComponent implements OnInit {
   }
 
   restoreToMainTasks(task: any): void {
-    const mainTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
     task._id = undefined; 
+    const mainTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
     mainTasks.unshift(task);
     localStorage.setItem('tasks', JSON.stringify(mainTasks));
   }
