@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Task = require('./models/Task');
+const User = require('./models/user');
 
 const app = express();
 const PORT = 3000;
@@ -42,43 +43,49 @@ function authenticateToken(req, res, next) {
 }
 
 // Signup Route
-app.post('/api/signup', (req, res) => {
-    const { email, password } = req.body;
-    const existingUser = users.find(u => u.email === email);
 
+app.post('/api/signup', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email }); 
     if (existingUser) {
-        return res.status(400).send('User already exists');
+      return res.status(400).send('User already exists');
     }
 
     if (!password) {
-        return res.status(400).send('Password is required');
+      return res.status(400).send('Password is required');
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = {
-        id: new mongoose.Types.ObjectId(), 
-        email,
-        password: hashedPassword
-    };
+    const hashedPassword = bcrypt.hashSync(password, 8); // Hash the password
 
-    users.push(newUser);
-    const token = jwt.sign({ id: newUser.id }, SECRET_KEY);
+    const newUser = new User({ email, password: hashedPassword }); // Create a new User instance
+    await newUser.save(); // Save the user to the database
 
+    const token = jwt.sign({ id: newUser._id }, SECRET_KEY); // Generate JWT token
     res.status(201).send({ token });
+  } catch (error) {
+    res.status(500).send({ message: 'Error creating user', error });
+  }
 });
 
 // Login Route
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = users.find(u => u.email === email);
-
-    if (!user || !bcrypt.compareSync(password, user.password)) {
+  
+    try {
+      const user = await User.findOne({ email }); // Fetch user from MongoDB by email
+  
+      if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).send({ message: 'Invalid email or password' });
+      }
+  
+      const token = jwt.sign({ id: user._id }, SECRET_KEY); // Generate JWT token
+      res.status(200).send({ token });
+    } catch (error) {
+      res.status(500).send({ message: 'Error logging in', error });
     }
-
-    const token = jwt.sign({ id: user.id }, SECRET_KEY);
-    res.status(200).send({ token });
-});
+});  
 
 // Add a Task
 app.post('/api/tasks', authenticateToken, async (req, res) => {
