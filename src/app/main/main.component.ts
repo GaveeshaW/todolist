@@ -206,6 +206,8 @@ export class MainComponent implements OnInit {
           console.error('Error adding task:', error);
         }
       );
+    } else {
+      window.prompt('Enter a valid task !');
     }
   }
 }
